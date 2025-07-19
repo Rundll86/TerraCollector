@@ -59,10 +59,14 @@ function search(target: string, exactly: boolean): ItemDefinition[] {
     });
 }
 function searchGroup(targets: string, exactly: boolean) {
-    return targets.split(/[\n,;]/gi).map(target => ({
-        items: search(target.split("*")[0], exactly),
-        count: Number(target.split("*")[1] ?? 1)
-    }));
+    return targets.split(/[\n,;]/gi).map(target => {
+        const targetName = target.split("*")[0].trim();
+        const count = Number(target.split("*")[1] ?? 1);
+        return {
+            items: search(targetName, exactly),
+            count: Number.isNaN(count) || count <= 0 ? 1 : count
+        }
+    });
 }
 </script>
 <style scoped>
