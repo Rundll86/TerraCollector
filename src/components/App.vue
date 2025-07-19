@@ -50,9 +50,9 @@ interface ItemDefinition {
 function search(target: string, exactly: boolean): ItemDefinition[] {
     return database.filter(e => {
         if (exactly) {
-            return e.name === target;
+            return e.name === target || e.identifier === target || e.id === target;
         } else {
-            return e.name?.includes(target);
+            return e.name?.includes(target) || e.identifier.includes(target);
         }
     });
 };
