@@ -3,22 +3,29 @@
         <NavLine />
         <ContainerFrame title="搜索">
             物品名称：
-            <input type="text" v-model="text">
+            <textarea type="text" v-model="text"></textarea>
             匹配模式：
             <SelectBar v-model:selected="matchMode" :options="['模糊', '完全']" />
-            物品数量：
-            <input type="number" v-model="count">
         </ContainerFrame>
-        <ContainerFrame title="快捷指令" v-if="selection">
-            给其他人：
-            /give {{ selection.id }} [玩家名称] {{ count }}
-            <br>
-            给自己：
-            /item {{ selection.id }} {{ count }}
+        <ContainerFrame title="快捷指令" class="protect-height">
+            把这个物品给谁？
+            <SelectBar :options="['自己', '其他人']" v-model:selected="commandMode" />
+            <div v-for="target in output">
+                <div v-for="item in target.items">
+                    <span v-if="commandMode === 1">
+                        /give {{ item.id }} [玩家名称] {{ target.count }}
+                    </span>
+                    <span v-else>
+                        /item {{ item.id }} {{ target.count }}
+                    </span>
+                </div>
+            </div>
         </ContainerFrame>
-        <ContainerFrame title="数据库" class="database">
-            <div v-for="item, index in output" @click="selectionId == index ? selectionId = -1 : selectionId = index">
-                {{ item.name }}({{ item.identifier }})：{{ item.id }}
+        <ContainerFrame title="数据库" class="protect-height">
+            <div v-for="target in output">
+                <div v-for="item in target.items">
+                    {{ item.name }}({{ item.identifier }})：{{ item.id }}
+                </div>
             </div>
         </ContainerFrame>
         <FootBar />
@@ -33,29 +40,30 @@ import FootBar from "./FootBar.vue";
 import database from "../items.json";
 const text = ref("");
 const matchMode = ref(0);
-const count = ref("1");
-const selectionId = ref(-1);
-const selection = computed<ItemDefinition | null>(() => {
-    return output.value[selectionId.value] ?? null;
-})
+const commandMode = ref(0);
 
-const output = computed(() => {
-    return search(text.value, !!matchMode.value);
-});
+const output = computed(() => searchGroup(text.value, !!matchMode.value));
 interface ItemDefinition {
     id: string;
     name?: string;
     identifier: string;
 }
 function search(target: string, exactly: boolean): ItemDefinition[] {
+    if (!target?.trim()) return [];
     return database.filter(e => {
         if (exactly) {
-            return e.name === target || e.identifier === target || e.id === target;
+            return e.name?.toLowerCase() === target.toLowerCase() || e.identifier.toLowerCase() === target.toLowerCase() || Number(e.id) === Number(target);
         } else {
-            return e.name?.includes(target) || e.identifier.includes(target);
+            return e.name?.toLowerCase().includes(target.toLowerCase()) || e.identifier.toLowerCase().includes(target.toLowerCase());
         }
     });
-};
+}
+function searchGroup(targets: string, exactly: boolean) {
+    return targets.split(/[\n,;]/gi).map(target => ({
+        items: search(target.split("*")[0], exactly),
+        count: Number(target.split("*")[1] ?? 1)
+    }));
+}
 </script>
 <style scoped>
 .terra-collector {
@@ -93,7 +101,7 @@ textarea {
     max-width: 50%;
 }
 
-.database {
+.protect-height {
     max-height: 40vh;
     overflow: auto;
 }
