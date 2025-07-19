@@ -1,8 +1,8 @@
 <template>
     <div class="footbar">
-        <OutLink href="https://github.com/Rundll86/TerraCollector">TerraCollector</OutLink>
+        <OutLink href="https://github.com/Rundll86/TerraCollector">泰拉收藏家</OutLink>
         v{{ packager.version }}
-        <OutLink href="https://rundll86.github.io">@F-Shrimp</OutLink>
+        By <OutLink href="https://rundll86.github.io">@F-Shrimp</OutLink>
     </div>
 </template>
 <script setup lang="ts">

@@ -1,6 +1,6 @@
 <template>
     <div class="navbar">
-        TerraCollector
+        泰拉收藏家
     </div>
 </template>
 <style scoped>
