@@ -25,8 +25,9 @@ defineProps({
     transform-origin: 50% 100%;
     transition: opacity 0.3s ease-out, transform 0.3s ease-out;
     padding: 4px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     pointer-events: none;
+    color: white;
 }
 
 .tips.show {
