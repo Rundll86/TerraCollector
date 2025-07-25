@@ -1,6 +1,6 @@
 <template>
     <div class="navbar">
-        泰拉收藏家
+        方程生成器
     </div>
 </template>
 <style scoped>

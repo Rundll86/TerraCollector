@@ -1,0 +1,606 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "formula_api",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [],
+  "paths": {
+    "/formula/get": {
+      "get": {
+        "summary": "查",
+        "deprecated": false,
+        "description": "获取指定物质的ID",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/Matter"
+                  }
+                },
+                "required": [
+                  "data"
+                ]
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Matter"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "null"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/formula/set": {
+      "post": {
+        "summary": "增/改",
+        "deprecated": false,
+        "description": "添加一个物质，先查对应库中有没有，没有就添加，有就回应",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "description": "物质式具体内容",
+                    "$ref": "#/components/schemas/Matter"
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "标识符"
+                  }
+                },
+                "required": [
+                  "data",
+                  "id"
+                ]
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "null"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "found": {
+                      "type": "string",
+                      "description": "已存在的ID"
+                    }
+                  },
+                  "required": [
+                    "found"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/reaction/get": {
+      "get": {
+        "summary": "查",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "index": {
+                    "$ref": "#/components/schemas/Range",
+                    "description": "索引区间"
+                  },
+                  "filter": {
+                    "type": "object",
+                    "properties": {
+                      "environment": {
+                        "$ref": "#/components/schemas/Environment",
+                        "description": "条件"
+                      },
+                      "matter": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/MatterReference"
+                        },
+                        "description": "用到的物质"
+                      }
+                    },
+                    "required": [
+                      "matter"
+                    ],
+                    "description": "过滤器"
+                  }
+                },
+                "required": [
+                  "index"
+                ],
+                "description": "根据指定的区间和过滤器来查询反应式"
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Reaction"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "null"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/reaction/set": {
+      "post": {
+        "summary": "增/改",
+        "deprecated": false,
+        "description": "会先进行比对，如果没有这样的化学式，则加入数据库的审核部分，等待审核通过后并入主数据库。",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/Reaction"
+                  }
+                },
+                "required": [
+                  "data"
+                ]
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "null"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "found": {
+                      "type": "string",
+                      "description": "已存在的ID"
+                    }
+                  },
+                  "required": [
+                    "found"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/particle/get": {
+      "get": {
+        "summary": "查",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "微粒ID"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "particle": {
+                      "$ref": "#/components/schemas/Particle"
+                    }
+                  },
+                  "required": [
+                    "particle"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "null"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/particle/set": {
+      "post": {
+        "summary": "增/改",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "ID"
+                  },
+                  "data": {
+                    "$ref": "#/components/schemas/Particle",
+                    "description": "微粒数据"
+                  }
+                },
+                "required": [
+                  "id",
+                  "data"
+                ]
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "found": {
+                      "type": "string",
+                      "description": "已存在的ID"
+                    }
+                  },
+                  "required": [
+                    "found"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Range": {
+        "type": "object",
+        "properties": {
+          "min": {
+            "type": "number",
+            "description": "最小值"
+          },
+          "max": {
+            "type": "number",
+            "description": "最大值"
+          }
+        },
+        "required": [
+          "min",
+          "max"
+        ],
+        "description": "选定一个数字范围"
+      },
+      "Matter": {
+        "type": "object",
+        "properties": {
+          "composer": {
+            "type": "string",
+            "enum": [
+              "atom",
+              "mole",
+              "lon"
+            ],
+            "description": "构成模式，分子、原子或离子"
+          },
+          "particles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Particle",
+              "description": "微粒列表"
+            },
+            "description": "组成物质的微粒"
+          }
+        },
+        "required": [
+          "composer",
+          "particles"
+        ],
+        "description": "组成方程式的一种物质"
+      },
+      "MatterGroup": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "description": "计量数"
+          },
+          "matter": {
+            "description": "物质式数据",
+            "$ref": "#/components/schemas/MatterReference"
+          }
+        },
+        "required": [
+          "count",
+          "matter"
+        ],
+        "description": "物质式及其计量数"
+      },
+      "MatterReference": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/Matter",
+            "description": "直接使用物质式数据"
+          },
+          {
+            "type": "string",
+            "description": "引用数据库中的ID"
+          }
+        ],
+        "description": "引用一个物质"
+      },
+      "Reaction": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "lon",
+              "normal"
+            ],
+            "description": "方程式类型，离子还是普通"
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatterGroup",
+              "description": "反应物列表"
+            },
+            "description": "反应物"
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatterGroup",
+              "description": "生成物列表"
+            },
+            "description": "生成物"
+          },
+          "environment": {
+            "$ref": "#/components/schemas/Environment",
+            "description": "环境要求，即条件"
+          }
+        },
+        "required": [
+          "type",
+          "inputs",
+          "outputs",
+          "environment"
+        ],
+        "description": "反应方程式"
+      },
+      "Environment": {
+        "type": "object",
+        "properties": {
+          "temprature": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "description": "最小值"
+                },
+                "max": {
+                  "type": "number",
+                  "description": "最大值"
+                },
+                "best": {
+                  "type": "number",
+                  "description": "最佳值"
+                }
+              },
+              "required": [
+                "best",
+                "min",
+                "max"
+              ],
+              "description": "区间列表"
+            },
+            "description": "需要的温度"
+          },
+          "cat": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatterReference",
+              "description": "列表"
+            },
+            "description": "催化剂"
+          },
+          "pyro": {
+            "type": "boolean",
+            "description": "是否需要点燃"
+          }
+        },
+        "description": "反应条件"
+      },
+      "Particle": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "description": "数量角标"
+          },
+          "electron": {
+            "type": "number",
+            "description": "电子"
+          },
+          "proton": {
+            "type": "number",
+            "description": "质子"
+          },
+          "neutron": {
+            "type": "number",
+            "description": "中子"
+          },
+          "valence": {
+            "type": "string",
+            "description": "化合价"
+          }
+        },
+        "description": "一个微粒",
+        "required": [
+          "count"
+        ]
+      },
+      "ParticleReference": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/Particle"
+          },
+          {
+            "type": "string",
+            "description": "直接引用ID"
+          }
+        ],
+        "description": "引用一个微粒"
+      }
+    },
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}

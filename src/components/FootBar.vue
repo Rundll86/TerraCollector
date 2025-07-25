@@ -1,6 +1,6 @@
 <template>
     <div class="footbar">
-        <OutLink href="https://github.com/Rundll86/TerraCollector">泰拉收藏家</OutLink>
+        <OutLink href="https://github.com/Rundll86/ReactionGenerator">方程生成器</OutLink>
         v{{ packager.version }}
         By <OutLink href="https://rundll86.github.io">@F-Shrimp</OutLink>
     </div>
