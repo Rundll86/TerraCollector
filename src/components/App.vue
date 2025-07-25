@@ -2,18 +2,7 @@
     <div class="terra-collector">
         <NavLine />
         <ContainerFrame>
-            <div class="cont">
-                <MatterView :view="current.inputs" :get="get" />
-                <span class="env" :style="{ '--h': `${environmentCount}rem` }">
-                    <span v-if="current.environment.pyro">▲</span><br>
-                    <span v-for="temp in [...current.environment.temprature ?? []]">
-                        {{ temp.min }}
-                        ~
-                        {{ temp.max }}°C
-                    </span>
-                </span>
-                <MatterView :view="current.outputs" :get="get" />
-            </div>
+            <ReactionView :current="current" :get="get" :environment-count="environmentCount" />
         </ContainerFrame>
         <FootBar />
     </div>
@@ -25,7 +14,7 @@ import info from "../elements.json";
 import ContainerFrame from './ContainerFrame.vue';
 import NavLine from './NavLine.vue';
 import FootBar from './FootBar.vue';
-import MatterView from './MatterView.vue';
+import ReactionView from './ReactionView.vue';
 
 const current = ref<components["schemas"]["Reaction"]>({
     type: "normal",
@@ -34,7 +23,7 @@ const current = ref<components["schemas"]["Reaction"]>({
         matter: {
             composer: "atom",
             particles: [{
-                proton: find("symbol", "Fe")?.number,
+                proton: find("symbol", "Fe").number,
                 count: 1
             }]
         }
@@ -43,16 +32,29 @@ const current = ref<components["schemas"]["Reaction"]>({
         matter: {
             composer: "lon",
             particles: [{
-                proton: find("symbol", "Cu")?.number,
-                electron: -2,
+                proton: find("symbol", "Cu").number,
+                electron: {
+                    sign: "+",
+                    value: 2
+                },
+                count: 1,
+                valence: {
+                    sign: "+",
+                    value: 2
+                }
+            }, {
+                proton: find("symbol", "S").number,
+                electron: {
+                    sign: "+",
+                    value: 6
+                },
                 count: 1
             }, {
-                proton: find("symbol", "S")?.number,
-                electron: +6,
-                count: 1
-            }, {
-                proton: find("symbol", "O")?.number,
-                electron: -2,
+                proton: find("symbol", "O").number,
+                electron: {
+                    sign: "-",
+                    value: 2
+                },
                 count: 4
             }]
         }
@@ -62,16 +64,25 @@ const current = ref<components["schemas"]["Reaction"]>({
         matter: {
             composer: "lon",
             particles: [{
-                proton: find("symbol", "Fe")?.number,
-                electron: +2,
+                proton: find("symbol", "Fe").number,
+                electron: {
+                    sign: "+",
+                    value: 2
+                },
                 count: 1
             }, {
-                proton: find("symbol", "S")?.number,
-                electron: -6,
+                proton: find("symbol", "S").number,
+                electron: {
+                    sign: "+",
+                    value: 6
+                },
                 count: 1
             }, {
-                proton: find("symbol", "O")?.number,
-                electron: +2,
+                proton: find("symbol", "O").number,
+                electron: {
+                    sign: "-",
+                    value: 2
+                },
                 count: 4
             }]
         }
@@ -80,7 +91,7 @@ const current = ref<components["schemas"]["Reaction"]>({
         matter: {
             composer: "atom",
             particles: [{
-                proton: find("symbol", "Cu")?.number,
+                proton: find("symbol", "Cu").number,
                 count: 1
             }]
         }
@@ -90,9 +101,22 @@ const current = ref<components["schemas"]["Reaction"]>({
             min: 0,
             max: 100,
             best: 50
+        }, {
+            min: 114,
+            max: 514,
+            best: 200
         }],
         pyro: true,
-        cat: []
+        cat: [{
+            composer: "mole",
+            particles: [{
+                count: 1,
+                proton: find("symbol", "Mn").number
+            }, {
+                count: 2,
+                proton: find("symbol", "O").number
+            }]
+        }]
     }
 });
 const environmentCount = computed(() => {
@@ -111,39 +135,6 @@ function find<K extends keyof typeof info.elements[number]>(key: K, value: typeo
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.env {
-    --h: 0rem;
-    position: relative;
-    display: inline-block;
-    transform: translateY(-75%);
-    min-width: 16px;
-    margin: 0 5px;
-    font-size: 14px;
-    margin-top: var(--h);
-}
-
-.env::before,
-.env::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: black;
-}
-
-.env::before {
-    top: calc(100%);
-}
-
-.env::after {
-    top: calc(100% + 0.3rem);
-}
-
-.cont {
-    display: flex;
 }
 
 .preview {

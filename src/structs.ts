@@ -344,6 +344,11 @@ export interface components {
             /** @description 最大值 */
             max: number;
         };
+        SignedNumber: {
+            /** @enum {string} */
+            sign: "+" | "-";
+            value: number;
+        };
         /** @description 组成方程式的一种物质 */
         Matter: {
             /**
@@ -397,17 +402,17 @@ export interface components {
         Particle: {
             /** @description 数量角标 */
             count: number;
+            /** @description 化合价 */
+            valence?: components["schemas"]["SignedNumber"];
             /** @description 电子 */
-            electron?: number;
+            electron?: components["schemas"]["SignedNumber"];
             /** @description 质子 */
             proton?: number;
             /** @description 中子 */
             neutron?: number;
-            /** @description 化合价 */
-            valence?: string;
         };
         /** @description 引用一个微粒 */
-        ParticleReference: components["schemas"]["Particle"] | string;
+        ParticleReference: components["schemas"]["Particle"];
     };
     responses: never;
     parameters: never;

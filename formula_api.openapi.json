@@ -414,6 +414,26 @@
         ],
         "description": "选定一个数字范围"
       },
+      "SignedNumber": {
+        "type": "object",
+        "properties": {
+          "sign": {
+            "type": "string",
+            "enum": [
+              "+",
+              "-"
+            ]
+          },
+          "value": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "sign",
+          "value"
+        ]
+      },
       "Matter": {
         "type": "object",
         "properties": {
@@ -464,10 +484,6 @@
           {
             "$ref": "#/components/schemas/Matter",
             "description": "直接使用物质式数据"
-          },
-          {
-            "type": "string",
-            "description": "引用数据库中的ID"
           }
         ],
         "description": "引用一个物质"
@@ -564,9 +580,13 @@
             "type": "number",
             "description": "数量角标"
           },
+          "valence": {
+            "description": "化合价",
+            "$ref": "#/components/schemas/SignedNumber"
+          },
           "electron": {
-            "type": "number",
-            "description": "电子"
+            "description": "电子",
+            "$ref": "#/components/schemas/SignedNumber"
           },
           "proton": {
             "type": "number",
@@ -575,10 +595,6 @@
           "neutron": {
             "type": "number",
             "description": "中子"
-          },
-          "valence": {
-            "type": "string",
-            "description": "化合价"
           }
         },
         "description": "一个微粒",
@@ -590,10 +606,6 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/Particle"
-          },
-          {
-            "type": "string",
-            "description": "直接引用ID"
           }
         ],
         "description": "引用一个微粒"
